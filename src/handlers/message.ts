@@ -113,12 +113,6 @@ async function handleIncomingMessage(message: Message) {
 		return;
 	}
 
-	// GPT (!gpt <prompt>)
-	if (startsWithIgnoreCase(messageString, config.gptPrefix)) {
-		const prompt = messageString.substring(config.gptPrefix.length + 1);
-		await handleMessageGPT(message, prompt);
-		return;
-	}
 
 	// DALLE (!dalle <prompt>)
 	if (startsWithIgnoreCase(messageString, config.dallePrefix)) {
@@ -126,6 +120,10 @@ async function handleIncomingMessage(message: Message) {
 		await handleMessageDALLE(message, prompt);
 		return;
 	}
+	
+	// GPT, by default the message will be handled as gpt, from user's perspective, it will be more efficient to input.
+	await handleMessageGPT(message, messageString);
+
 
 }
 
