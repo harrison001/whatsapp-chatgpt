@@ -50,14 +50,18 @@ const handleMessageGPT = async (message: Message, prompt: string) => {
 
 		cli.print(`[GPT] Answer to ${message.from}: ${response}  | OpenAI request took ${end}ms)`);
 
+    //Default: Text reply
+    message.reply(response);
+		
 		// TTS reply (Default: disabled)
 		if (config.ttsEnabled) {
-			sendVoiceMessageReply(message, response);
-			return;
+		  const extractedEnglish = extractEnglish(response);
+		  if (extractedEnglish.length > 0) {
+		    sendVoiceMessageReply(message, extractedEnglish);
+		  }
+		  //return;
 		}
 
-		// Default: Text reply
-		message.reply(response);
 	} catch (error: any) {
 		console.error("An error occured", error);
 		message.reply("An error occured, please contact the administrator. (" + error.message + ")");
@@ -72,31 +76,55 @@ const handleDeleteConversation = async (message: Message) => {
 	message.reply("Conversation context was resetted!");
 }
 
-async function sendVoiceMessageReply(message: Message, gptTextResponse: string) {
-	// Get audio buffer
-	cli.print(`[Speech API] Generating audio from GPT response "${gptTextResponse}"...`);
-	const audioBuffer = await ttsRequest(gptTextResponse);
-	cli.print("[Speech API] Audio generated!");
 
-	// Check if audio buffer is valid
-	if (audioBuffer == null || audioBuffer.length == 0) {
-		message.reply("Speech API couldn't generate audio, please contact the administrator.");
-		return;
-	}
+function extractEnglish(str) {
+    const englishRegEx = /[a-zA-Z0-9\s.,!?;:'"(){}[\]\\/@#$%^&*+=<>_-]+/g;
+    const englishMatches = str.match(englishRegEx);
 
-	// Get temp folder and file path
-	const tempFolder = os.tmpdir();
-	const tempFilePath = path.join(tempFolder, randomUUID() + ".opus");
-
-	// Save buffer to temp file
-	fs.writeFileSync(tempFilePath, audioBuffer);
-
-	// Send audio
-	const messageMedia = new MessageMedia("audio/ogg; codecs=opus", audioBuffer.toString("base64"));
-	message.reply(messageMedia);
-
-	// Delete temp file
-	fs.unlinkSync(tempFilePath);
+    if (englishMatches) {
+        const result = englishMatches.join('');
+        const hasLetter = /[a-zA-Z]/.test(result);
+        return hasLetter ? result : '';
+    } else {
+        return '';
+    }
 }
+
+
+async function sendVoiceMessageReply(message: Message, gptTextResponse: string) {
+    // Maximum text length for each chunk
+    const chunkSize = 200;
+
+    // Split the text into chunks
+    const chunks = [];
+    for (let i = 0; i < gptTextResponse.length; i += chunkSize) {
+        chunks.push(gptTextResponse.slice(i, i + chunkSize));
+    }
+
+    // Process each chunk
+    for (const chunk of chunks) {
+        try {
+            cli.print(`[Speech API] Generating audio from GPT response chunk "${chunk}"...`);
+            const audioBuffer = await ttsRequest(chunk);
+            cli.print("[Speech API] Audio generated!");
+
+            // Check if audio buffer is valid
+            if (audioBuffer == null) {
+                message.reply("Speech API couldn't generate audio, please contact the administrator.");
+            } else if (audioBuffer.length > 0) {
+                // Send audio
+                const messageMedia = new MessageMedia("audio/ogg; codecs=opus", audioBuffer.toString("base64"));
+                message.reply(messageMedia);
+            }
+
+        } catch (error) {
+            console.error("An error occurred:", error);
+            console.error("Error message:", error.message)
+            message.reply("An error occurred while processing your request. Please contact the administrator.");
+            break;
+        }
+    }
+}
+
 
 export { handleMessageGPT, handleDeleteConversation };

@@ -113,19 +113,19 @@ async function handleIncomingMessage(message: Message) {
 		return;
 	}
 
-	// GPT (!gpt <prompt>)
-	if (startsWithIgnoreCase(messageString, config.gptPrefix)) {
-		const prompt = messageString.substring(config.gptPrefix.length + 1);
-		await handleMessageGPT(message, prompt);
-		return;
-	}
-
 	// DALLE (!dalle <prompt>)
 	if (startsWithIgnoreCase(messageString, config.dallePrefix)) {
 		const prompt = messageString.substring(config.dallePrefix.length + 1);
 		await handleMessageDALLE(message, prompt);
 		return;
 	}
+
+	// GPT (!gpt <prompt>)
+	//if (startsWithIgnoreCase(messageString, config.gptPrefix)) {
+	const prompt = messageString;
+	await handleMessageGPT(message, prompt);
+	//return;
+	//}
 
 }
 
