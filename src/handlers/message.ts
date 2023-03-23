@@ -125,13 +125,6 @@ async function handleIncomingMessage(message: Message) {
 
 	const selfNotedMessage = message.fromMe && message.hasQuotedMsg === false && message.from === message.to;
 
-	// GPT (!gpt <prompt>)
-	if (startsWithIgnoreCase(messageString, config.gptPrefix)) {
-		const prompt = messageString.substring(config.gptPrefix.length + 1);
-		await handleMessageGPT(message, prompt);
-		return;
-	}
-
 	// DALLE (!dalle <prompt>)
 	if (startsWithIgnoreCase(messageString, config.dallePrefix)) {
 		const prompt = messageString.substring(config.dallePrefix.length + 1);
@@ -139,10 +132,20 @@ async function handleIncomingMessage(message: Message) {
 		return;
 	}
 
+<<<<<<< HEAD
 	if (!config.prefixEnabled || (config.prefixSkippedForMe && selfNotedMessage)) {
 		await handleMessageGPT(message, messageString);
 		return;
 	}
+=======
+	// GPT (!gpt <prompt>)
+	//if (startsWithIgnoreCase(messageString, config.gptPrefix)) {
+	const prompt = messageString;
+	await handleMessageGPT(message, prompt);
+	//return;
+	//}
+
+>>>>>>> Your commit message
 }
 
 export { handleIncomingMessage };
