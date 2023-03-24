@@ -123,34 +123,34 @@ async function sendVoiceMessageReply(message: Message, gptTextResponse: string) 
         try {
 			var logTAG = "[TTS]";
 			var ttsRequest = async function (): Promise<Buffer | null> {
-				return await speechTTSRequest(gptTextResponse);
+				return await speechTTSRequest(chunk);
 			};
 
 			switch (config.ttsMode) {
 				case TTSMode.SpeechAPI:
 					logTAG = "[SpeechAPI]";
 					ttsRequest = async function (): Promise<Buffer | null> {
-						return await speechTTSRequest(gptTextResponse);
+						return await speechTTSRequest(chunk);
 					};
 					break;
 
 				case TTSMode.AWSPolly:
 					logTAG = "[AWSPolly]";
 					ttsRequest = async function (): Promise<Buffer | null> {
-						return await awsTTSRequest(gptTextResponse);
+						return await awsTTSRequest(chunk);
 					};
 					break;
 
 				default:
 					logTAG = "[SpeechAPI]";
 					ttsRequest = async function (): Promise<Buffer | null> {
-						return await speechTTSRequest(gptTextResponse);
+						return await speechTTSRequest(chunk);
 					};
 					break;
 			}
 
 			// Get audio buffer
-			cli.print(`${logTAG} Generating audio from GPT response "${gptTextResponse}"...`);
+			cli.print(`${logTAG} Generating audio from GPT response "${chunk}"...`);
 			const audioBuffer = await ttsRequest();
 
 	
