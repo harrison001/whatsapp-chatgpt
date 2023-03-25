@@ -48,7 +48,9 @@ const handleMessageAIConfig = async (message: Message, prompt: any) => {
 			    helpMessage += `\t${target} ${type}: ${Object.keys(aiConfigValues[target][type]).join(", ")}\n`;
 			}
 		    }
-		    helpMessage += "\nTo get more information about the available targets, types, and values, type !config help.";
+		    helpMessage += "\nExample usage:\n";
+		    helpMessage += "\t!config dalle size 512x512\n";
+		    helpMessage += "\t!config tts yes\n";
 		    message.reply(helpMessage);
 		    return;
 		}
