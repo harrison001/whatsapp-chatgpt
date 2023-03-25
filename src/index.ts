@@ -1,5 +1,7 @@
 import qrcode from "qrcode-terminal";
 import { Client, Message, Events, LocalAuth } from "whatsapp-web.js";
+import { Telegraf } from "telegraf";
+import { Client as DiscordClient } from "discord.js";
 
 // Constants
 import constants from "./constants";
@@ -86,6 +88,31 @@ const start = async () => {
 
 	// WhatsApp initialization
 	client.initialize();
+	
+	////////////////
+	// Telegram bot
+	const telegramBot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+
+	// Handle incoming message
+	telegramBot.on("message", async (ctx) => {
+	  // Handle incoming message here
+	});
+
+	// Start bot
+	telegramBot.launch();
+
+	// Discord client
+	const discordBot = new DiscordClient();
+
+	// Handle incoming message
+	discordBot.on("message", async (message) => {
+	  // Handle incoming message here
+	});
+
+	// Login to Discord
+	discordBot.login(process.env.DISCORD_BOT_TOKEN);
+	////////////////
+	
 };
 
 start();
