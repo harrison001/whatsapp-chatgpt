@@ -19,4 +19,5 @@ export interface IAiConfig {
 	dalle: {
 		size: dalleImageSize;
 	};
+	ttsEnabled : boolean;
 }
