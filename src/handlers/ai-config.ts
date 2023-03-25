@@ -6,7 +6,7 @@ const aiConfig: IAiConfig = {
 	dalle: {
 		size: dalleImageSize["512x512"]
 	},
-	ttsEnabled : false
+	ttsEnabled : true
 	// chatgpt: {}
 };
 
