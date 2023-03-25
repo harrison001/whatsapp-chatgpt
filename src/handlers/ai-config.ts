@@ -14,6 +14,13 @@ const handleMessageAIConfig = async (message: Message, prompt: any) => {
 		console.log("[AI-Config] Received prompt from " + message.from + ": " + prompt);
 
 		const args: string[] = prompt.split(" ");
+		
+		// Handle TTS yes/no command
+		if (args.length == 2 && args[0].toLowerCase() === "tts" && (args[1].toLowerCase() === "yes" || args[1].toLowerCase() === "no")) {
+			config.ttsEnabled = args[1].toLowerCase() === "yes";
+			message.reply("TTS is now " + (config.ttsEnabled ? "enabled" : "disabled") + ".");
+			return;
+		}
 
 		/*
 			!config
