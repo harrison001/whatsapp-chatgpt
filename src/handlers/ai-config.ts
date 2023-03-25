@@ -24,24 +24,33 @@ const handleMessageAIConfig = async (message: Message, prompt: any) => {
 		}
 
 		/*
-			!config
-			!config help
+		    Available commands:
+		    !config <target> <type> <value> - Set <target> <type> to <value>
+		    !config tts yes - Turn on TTS and read English responses aloud for easier learning
+		    !config tts no - Turn off TTS and receive text-only responses
+
+		    Available targets and types:
+		    dalle size: 256x256, 512x512, 1024x1024
+		    ttsEnabled: yes, no
+
+		    To get more information about the available targets, types, and values, type !config help.
 		*/
 		if (args.length == 1 || prompt === "help") {
-			let helpMessage = "Available commands:\n";
-			for (let target in aiConfigTarget) {
-				for (let type in aiConfigTypes[target]) {
-					helpMessage += `\t!config ${target} ${type} <value> - Set ${target} ${type} to <value>\n`;
-				}
+		    let helpMessage = "Available commands:\n";
+		    for (let target in aiConfigTarget) {
+			for (let type in aiConfigTypes[target]) {
+			    helpMessage += `\t!config ${target} ${type} <value> - Set ${target} ${type} to <value>\n`;
 			}
-			helpMessage += "\nAvailable values:\n";
-			for (let target in aiConfigTarget) {
-				for (let type in aiConfigTypes[target]) {
-					helpMessage += `\t${target} ${type}: ${Object.keys(aiConfigValues[target][type]).join(", ")}\n`;
-				}
+		    }
+		    helpMessage += "\nAvailable values:\n";
+		    for (let target in aiConfigTarget) {
+			for (let type in aiConfigTypes[target]) {
+			    helpMessage += `\t${target} ${type}: ${Object.keys(aiConfigValues[target][type]).join(", ")}\n`;
 			}
-			message.reply(helpMessage);
-			return;
+		    }
+		    helpMessage += "\nTo get more information about the available targets, types, and values, type !config help.";
+		    message.reply(helpMessage);
+		    return;
 		}
 
 		// !config <target> <type> <value>
