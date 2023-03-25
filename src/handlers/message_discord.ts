@@ -8,9 +8,9 @@ import config from "../config";
 import * as cli from "../cli/ui";
 
 // ChatGPT & DALLE
-import { handleMessageGPT, handleDeleteConversation } from "../handlers/gpt_discord";
-import { handleMessageDALLE } from "../handlers/dalle_discord";
-import { handleMessageAIConfig } from "../handlers/ai-config_discord";
+import { handleMessageGPT_discord, handleDeleteConversation_discord } from "../handlers/gpt_discord";
+import { handleMessageDALLE_discord } from "../handlers/dalle_discord";
+import { handleMessageAIConfig_discord } from "../handlers/ai-config_discord";
 
 // Speech API & Whisper
 import { TranscriptionMode } from "../types/transcription-mode";
@@ -110,7 +110,7 @@ async function handleIncomingMessage_discord(message: Message) {
 
 	// Clear conversation context (!clear)
 	if (startsWithIgnoreCase(messageString, config.resetPrefix)) {
-		await handleDeleteConversation(message);
+		await handleDeleteConversation_discord(message);
 		return;
 	}
 
