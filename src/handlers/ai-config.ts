@@ -35,25 +35,34 @@ const handleMessageAIConfig = async (message: Message, prompt: any) => {
 
 		    To get more information about the available targets, types, and values, type !config help.
 		*/
-		if (args.length == 1 || prompt === "help") {
-		    let helpMessage = "Available commands:\n";
-		    for (let target in aiConfigTarget) {
-			for (let type in aiConfigTypes[target]) {
-			    helpMessage += `\t!config ${target} ${type} <value> - Set ${target} ${type} to <value>\n`;
-			}
+		if (args.length === 1 || prompt === "help") {
+		  let helpMessage = "Available commands:\n\n";
+		  for (let target in aiConfigTarget) {
+		    helpMessage += `  ${target}:\n`;
+		    for (let type in aiConfigTypes[target]) {
+		      helpMessage += `    !config ${target} ${type} <value> - Set ${target} ${type} to <value>\n`;
 		    }
-		    helpMessage += "\nAvailable values:\n";
-		    for (let target in aiConfigTarget) {
-			for (let type in aiConfigTypes[target]) {
-			    helpMessage += `\t${target} ${type}: ${Object.keys(aiConfigValues[target][type]).join(", ")}\n`;
-			}
+		    helpMessage += "\n";
+		  }
+		  helpMessage += "  !config tts yes - Turn on TTS and read English responses aloud for easier learning\n";
+		  helpMessage += "  !config tts no - Turn off TTS and receive text-only responses\n\n";
+
+		  helpMessage += "Available targets and types:\n";
+		  for (let target in aiConfigTarget) {
+		    helpMessage += `  ${target}:\n`;
+		    for (let type in aiConfigTypes[target]) {
+		      helpMessage += `    ${type}: ${Object.keys(aiConfigValues[target][type]).join(", ")}\n`;
 		    }
-		    helpMessage += "\nExample usage:\n";
-		    helpMessage += "\t!config dalle size 512x512\n";
-		    helpMessage += "\t!config tts yes\n";
-		    message.reply(helpMessage);
-		    return;
+		    helpMessage += "\n";
+		  }
+
+		  helpMessage += "To get more information about the available targets, types, and values, type !config help.";
+
+		  message.reply(helpMessage);
+		  return;
 		}
+
+
 
 		// !config <target> <type> <value>
 		if (args.length !== 3) {
