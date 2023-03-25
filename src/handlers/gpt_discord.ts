@@ -11,7 +11,7 @@ import config from "../config";
 import { ttsRequest as speechTTSRequest } from "../providers/speech";
 import { ttsRequest as awsTTSRequest } from "../providers/aws";
 import { TTSMode } from "../types/tts-mode";
-import { aiConfig } from "../handlers/ai-config_discord";
+import { aiConfig_discord } from "../handlers/ai-config_discord";
 // Moderation
 import { moderateIncomingPrompt } from "./moderation";
 
@@ -85,7 +85,7 @@ const handleMessageGPT_discord = async (message: Message, prompt: string) => {
 	}
 };
 
-const handleDeleteConversation = async (message: Message) => {
+const handleDeleteConversation_discord = async (message: Message) => {
 	// Delete conversation
 	delete conversations[message.from];
 
