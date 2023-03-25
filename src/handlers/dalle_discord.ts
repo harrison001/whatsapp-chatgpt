@@ -1,6 +1,6 @@
 import { MessageMedia } from "whatsapp-web.js";
 import { openai } from "../providers/openai";
-import { aiConfig } from "../handlers/ai-config_discord";
+import { aiConfig_discord } from "../handlers/ai-config_discord";
 import { CreateImageRequestSizeEnum } from "openai";
 import config from "../config";
 import * as cli from "../cli/ui";
