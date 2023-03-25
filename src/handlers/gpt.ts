@@ -11,7 +11,7 @@ import config from "../config";
 import { ttsRequest as speechTTSRequest } from "../providers/speech";
 import { ttsRequest as awsTTSRequest } from "../providers/aws";
 import { TTSMode } from "../types/tts-mode";
-
+import { aiConfig } from "../handlers/ai-config";
 // Moderation
 import { moderateIncomingPrompt } from "./moderation";
 
