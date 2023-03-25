@@ -71,7 +71,7 @@ const handleMessageGPT = async (message: Message, prompt: string) => {
     		message.reply(response);
 		
 		// TTS reply (Default: disabled)
-		if (config.ttsEnabled) {
+		if (aiConfig.ttsEnabled) {
 		  const extractedEnglish = extractEnglish(response);
 		  if (extractedEnglish.length > 0) {
 		    sendVoiceMessageReply(message, extractedEnglish);
