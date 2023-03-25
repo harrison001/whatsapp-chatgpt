@@ -9,6 +9,8 @@ import constants from "./constants";
 // CLI
 import * as cli from "./cli/ui";
 import { handleIncomingMessage } from "./handlers/message";
+import { handleIncomingMessage_telegram } from "./handlers/message_telegram";
+import { handleIncomingMessage_discord } from "./handlers/message_discord";
 
 // Ready timestamp of the bot
 let botReadyTimestamp: Date | null = null;
@@ -95,7 +97,13 @@ const start = async () => {
 
 	// Handle incoming message
 	telegramBot.on("message", async (ctx) => {
-	  // Handle incoming message here
+		const message = ctx.update.message;
+
+		// Ignore if message is empty or from bot
+		if (!message || message.from.is_bot) return;
+
+		 // TODO: Handle incoming message
+		 // await handleIncomingMessage_telegram(message);
 	});
 
 	// Start bot
@@ -106,7 +114,9 @@ const start = async () => {
 
 	// Handle incoming message
 	discordBot.on("message", async (message) => {
-	  // Handle incoming message here
+		if (message.author.bot || message.webhookID) return;
+	  	// Handle incoming message here
+		//await handleIncomingMessage_discord(message);
 	});
 
 	// Login to Discord
