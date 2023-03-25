@@ -11,7 +11,7 @@ import config from "../config";
 import { ttsRequest as speechTTSRequest } from "../providers/speech";
 import { ttsRequest as awsTTSRequest } from "../providers/aws";
 import { TTSMode } from "../types/tts-mode";
-import { aiConfig } from "../handlers/ai-config_telegram";
+import { aiConfig_telegram } from "../handlers/ai-config_telegram";
 // Moderation
 import { moderateIncomingPrompt } from "./moderation";
 
@@ -85,7 +85,7 @@ const handleMessageGPT_telegram = async (message: Message, prompt: string) => {
 	}
 };
 
-const handleDeleteConversation = async (message: Message) => {
+const handleDeleteConversation_telegram = async (message: Message) => {
 	// Delete conversation
 	delete conversations[message.from];
 
@@ -173,4 +173,4 @@ async function sendVoiceMessageReply(message: Message, gptTextResponse: string) 
     }
 }
 
-export { handleMessageGPT_telegram, handleDeleteConversation };
+export { handleMessageGPT_telegram, handleDeleteConversation_telegram };
