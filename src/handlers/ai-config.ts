@@ -16,10 +16,10 @@ const handleMessageAIConfig = async (message: Message, prompt: any) => {
 		const args: string[] = prompt.split(" ");
 		
 		// Handle TTS yes/no command
-		if (args.length == 2 && args[0].toLowerCase() === "tts" && (args[1].toLowerCase() === "yes" || args[1].toLowerCase() === "no")) {
-			config.ttsEnabled = args[1].toLowerCase() === "yes";
-			message.reply("TTS is now " + (config.ttsEnabled ? "enabled" : "disabled") + ".");
-			return;
+		if (args.length === 3 && args[0].toLowerCase() === "!config" && args[1].toLowerCase() === "tts" && (args[2].toLowerCase() === "yes" || args[2].toLowerCase() === "no")) {
+		    config.ttsEnabled = args[2].toLowerCase() === "yes";
+		    message.reply("TTS is now " + (config.ttsEnabled ? "enabled" : "disabled") + ".");
+		    return;
 		}
 
 		/*
