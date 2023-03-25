@@ -5,7 +5,8 @@ import { dalleImageSize } from "../types/dalle-config";
 const aiConfig: IAiConfig = {
 	dalle: {
 		size: dalleImageSize["512x512"]
-	}
+	},
+	ttsEnabled : false
 	// chatgpt: {}
 };
 
