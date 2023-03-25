@@ -1,6 +1,6 @@
 import { MessageMedia } from "whatsapp-web.js";
 import { openai } from "../providers/openai";
-import { aiConfig } from "../handlers/ai-config";
+import { aiConfig } from "../handlers/ai-config_telegram";
 import { CreateImageRequestSizeEnum } from "openai";
 import config from "../config";
 import * as cli from "../cli/ui";
@@ -28,7 +28,7 @@ const handleMessageDALLE_telegram = async (message: any, prompt: any) => {
 		const response = await openai.createImage({
 			prompt: prompt,
 			n: 1,
-			size: aiConfig.dalle.size as CreateImageRequestSizeEnum,
+			size: aiConfig_telegram.dalle.size as CreateImageRequestSizeEnum,
 			response_format: "b64_json"
 		});
 
