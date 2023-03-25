@@ -67,8 +67,8 @@ const handleMessageGPT = async (message: Message, prompt: string) => {
 
 		cli.print(`[GPT] Answer to ${message.from}: ${response}  | OpenAI request took ${end}ms)`);
 
-    	//Default: Text reply
-    	message.reply(response);
+    		//Default: Text reply
+    		message.reply(response);
 		
 		// TTS reply (Default: disabled)
 		if (config.ttsEnabled) {
