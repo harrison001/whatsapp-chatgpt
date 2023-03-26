@@ -103,7 +103,7 @@ const start = async () => {
 		if (!message || message.from.is_bot) return;
 
 		 // TODO: Handle incoming message
-		 // await handleIncomingMessage_telegram(message);
+		 await handleIncomingMessage_telegram(message);
 	});
 
 	// Start bot
@@ -116,7 +116,7 @@ const start = async () => {
 	discordBot.on("message", async (message) => {
 		if (message.author.bot || message.webhookID) return;
 	  	// Handle incoming message here
-		//await handleIncomingMessage_discord(message);
+		await handleIncomingMessage_discord(message);
 	});
 
 	// Login to Discord
