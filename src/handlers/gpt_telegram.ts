@@ -2,7 +2,7 @@ import os from "os";
 import fs from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
-import { Message } from "discord.js";
+import { Telegraf, Context } from 'telegraf';
 import { chatgpt } from "../providers/openai";
 import * as cli from "../cli/ui";
 import config from "../config";
@@ -18,7 +18,7 @@ import { moderateIncomingPrompt } from "./moderation";
 // Mapping from number to last conversation id
 const conversations = {};
 
-const handleMessageGPT_telegram = async (message: Message, prompt: string) => {
+const handleMessageGPT_telegram = async (message: Context, prompt: string) => {
 	try {
 		// Get last conversation
 		const lastConversationId = conversations[message.from];
@@ -85,7 +85,7 @@ const handleMessageGPT_telegram = async (message: Message, prompt: string) => {
 	}
 };
 
-const handleDeleteConversation_telegram = async (message: Message) => {
+const handleDeleteConversation_telegram = async (message: Context) => {
 	// Delete conversation
 	delete conversations[message.from];
 
@@ -108,7 +108,7 @@ function extractEnglish(str) {
 }
 
 
-async function sendVoiceMessageReply(message: Message, gptTextResponse: string) {
+async function sendVoiceMessageReply(message: Context, gptTextResponse: string) {
     // Maximum text length for each chunk
     const chunkSize = 200;
 
