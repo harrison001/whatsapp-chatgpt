@@ -1,4 +1,4 @@
-import { MessageMedia } from "whatsapp-web.js";
+import { MessageAttachment } from "discord.js";
 import { openai } from "../providers/openai";
 import { aiConfig_discord } from "../handlers/ai-config_discord";
 import { CreateImageRequestSizeEnum } from "openai";
