@@ -1,4 +1,4 @@
-import { MessageMedia } from "whatsapp-web.js";
+import { Message } from "telegram-typings";
 import { openai } from "../providers/openai";
 import { aiConfig } from "../handlers/ai-config_telegram";
 import { CreateImageRequestSizeEnum } from "openai";
