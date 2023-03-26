@@ -1,4 +1,4 @@
-import { Message } from "whatsapp-web.js";
+import { Message } from "discord.js";
 import { startsWithIgnoreCase } from "../utils";
 
 // Config & Constants
