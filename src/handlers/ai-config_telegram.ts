@@ -1,4 +1,4 @@
-import { Message } from "telegram-typings";
+import { Telegraf, Context } from 'telegraf';
 import { aiConfigTarget, aiConfigTypes, aiConfigValues, IAiConfig } from "../types/ai-config";
 import { dalleImageSize } from "../types/dalle-config";
 
@@ -10,7 +10,7 @@ const aiConfig_telegram: IAiConfig = {
 	// chatgpt: {}
 };
 
-const handleMessageAIConfig_telegram = async (message: Message, prompt: any) => {
+const handleMessageAIConfig_telegram = async (message: Context, prompt: any) => {
 	try {
 		console.log("[AI-Config] Received prompt from " + message.from + ": " + prompt);
 
