@@ -3,6 +3,7 @@ import fs from "fs";
 import path from "path";
 import { randomUUID } from "crypto";
 import { Message, MessageMedia } from "whatsapp-web.js";
+import { Message } from "telegram-typings";
 import { chatgpt } from "../providers/openai";
 import * as cli from "../cli/ui";
 import config from "../config";
