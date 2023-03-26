@@ -103,7 +103,7 @@ const start = async () => {
 		if (!message || message.from.is_bot) return;
 
 		 // TODO: Handle incoming message
-		 await handleIncomingMessage_telegram(message);
+		 await handleIncomingMessage_telegram(ctx);
 	});
 
 	// Start bot
