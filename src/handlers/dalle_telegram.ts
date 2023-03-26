@@ -1,4 +1,4 @@
-import { Message } from "telegram-typings";
+import { Telegraf, Context } from 'telegraf';
 import { openai } from "../providers/openai";
 import { aiConfig } from "../handlers/ai-config_telegram";
 import { CreateImageRequestSizeEnum } from "openai";
