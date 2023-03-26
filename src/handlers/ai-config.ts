@@ -1,4 +1,4 @@
-import { Message } from "telegram-typings";
+import { Message } from "whatsapp-web.js";
 import { aiConfigTarget, aiConfigTypes, aiConfigValues, IAiConfig } from "../types/ai-config";
 import { dalleImageSize } from "../types/dalle-config";
 
