@@ -10,6 +10,9 @@ dotenv.config();
 
 // Config Interface
 interface IConfig {
+
+	azureKey: string;
+	azureRegin: string;
 	telegramAPIKey: string;
 	// OpenAI
 	openAIAPIKey: string;
@@ -53,6 +56,8 @@ interface IConfig {
 
 // Config
 const config: IConfig = {
+	azureKey: process.env.AZURE_SPEECH_KEY ||"", // Default: ""
+	azureRegin: process.env.AZURE_SPEECH_REGION ||"", // Default: ""
 	telegramAPIKey: process.env.TELEGRAME_KEY ||"", // Default: ""
 	openAIAPIKey: process.env.OPENAI_API_KEY || "", // Default: ""
 	openAIModel: process.env.OPENAI_GPT_MODEL || "gpt-3.5-turbo", // Default: gpt-3.5-turbo

@@ -10,6 +10,7 @@ import config from "../config";
 // TTS
 import { ttsRequest as speechTTSRequest } from "../providers/speech";
 import { ttsRequest as awsTTSRequest } from "../providers/aws";
+import { ttsRequest as azureTTSRequest } from "../providers/Azure_tts";
 import { TTSMode } from "../types/tts-mode";
 import { aiConfig } from "../handlers/ai-config";
 // Moderation
@@ -141,6 +142,12 @@ async function sendVoiceMessageReply(message: Message, gptTextResponse: string) 
 					};
 					break;
 
+				case TTSMode.AZURE_TTS:
+					logTAG = "[azure_tts]";
+					ttsRequest = async function (): Promise<Buffer | null> {
+						return await azureTTSRequest(chunk);
+					};
+					break;
 				default:
 					logTAG = "[SpeechAPI]";
 					ttsRequest = async function (): Promise<Buffer | null> {

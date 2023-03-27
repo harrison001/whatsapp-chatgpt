@@ -129,6 +129,11 @@ const start = async () => {
 	////////////////
 	cli.print("openaikey: " + config.openAIAPIKey);
 	cli.print("telegramkey: " + config.telegramAPIKey);
+	cli.print("azureKey:" + config.azureKey); 
+	cli.print("azureRegin:" +config.azureRegin);
+
+	 
+	
 	
 };
 
