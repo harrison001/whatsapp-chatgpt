@@ -10,6 +10,7 @@ dotenv.config();
 
 // Config Interface
 interface IConfig {
+	telegramAPIKey: string;
 	// OpenAI
 	openAIAPIKey: string;
 	openAIModel: string;
