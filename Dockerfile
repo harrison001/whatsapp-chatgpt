@@ -22,6 +22,7 @@ ENV PREFIX_ENABLED ""
 COPY . .
 COPY package.json package-lock.json ./
 RUN npm install
+RUN npm install microsoft-cognitiveservices-speech-sdk
 RUN npm install -g pm2
 RUN npm install vite-node
 RUN npm update whatsapp-web.js
