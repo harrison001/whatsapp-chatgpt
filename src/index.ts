@@ -109,7 +109,7 @@ const start = async () => {
 		 await handleIncomingMessage_telegram(ctx);
 		 
 	});
-
+	
 	// Start bot
 	telegramBot.launch();
 
@@ -127,6 +127,8 @@ const start = async () => {
 	// Login to Discord
 	discordBot.login(process.env.DISCORD_BOT_TOKEN);*/
 	////////////////
+	cli.print("openaikey: " + config.openAIAPIKey);
+	cli.print("telegramkey: " + config.telegramAPIKey);
 	
 };
 
