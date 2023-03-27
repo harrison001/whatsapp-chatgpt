@@ -33,7 +33,7 @@ const handleMessageDALLE_telegram = async (message: any, prompt: any) => {
 			response_format: "b64_json"
 		});
 
-		console.log(response); // Log the response object
+		//console.log(response); // Log the response object
 		const end = Date.now() - start;
  		const imageData = response.data.data[0].b64_json;
   		// Convert base64 to buffer
