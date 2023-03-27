@@ -48,6 +48,9 @@ async function handleIncomingMessage(message: Message) {
 
 	// Transcribe audio
 	if (message.hasMedia) {
+
+		//message.mediaData.mediaStage.mediaURL; 
+
 		const media = await message.downloadMedia();
 
 		// Ignore non-audio media
@@ -58,6 +61,10 @@ async function handleIncomingMessage(message: Message) {
 			cli.print("[Transcription] Received voice messsage but voice transcription is disabled.");
 			return;
 		}
+
+		////message.mediaData.mediaStage.mediaURL;  use the url as input to get the transcription from api directly.
+		// the api needs to support url as input.
+
 
 		// Convert media to base64 string
 		const mediaBuffer = Buffer.from(media.data, "base64");

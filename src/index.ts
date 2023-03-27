@@ -1,10 +1,13 @@
 import qrcode from "qrcode-terminal";
 import { Client, Message, Events, LocalAuth } from "whatsapp-web.js";
 import { Telegraf } from "telegraf";
-import { Client as DiscordClient } from "discord.js";
+//import { Client as DiscordClient } from "discord.js";
+import { Client as DiscordClient, Intents } from "discord.js";
 
 // Constants
 import constants from "./constants";
+// Config & Constants
+import config from "./config";
 
 // CLI
 import * as cli from "./cli/ui";
@@ -93,7 +96,7 @@ const start = async () => {
 	
 	////////////////
 	// Telegram bot
-	const telegramBot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN);
+	const telegramBot = new Telegraf(config.telegramAPIKey);
 
 	// Handle incoming message
 	telegramBot.on("message", async (ctx) => {
@@ -104,23 +107,25 @@ const start = async () => {
 
 		 // TODO: Handle incoming message
 		 await handleIncomingMessage_telegram(ctx);
+		 
 	});
 
 	// Start bot
 	telegramBot.launch();
 
 	// Discord client
-	const discordBot = new DiscordClient();
+	//const discordBot = new Client({ intents: [Intents.FLAGS.GUILDS, Intents.FLAGS.GUILD_MESSAGES] });
+	//const discordBot = new DiscordClient();
 
 	// Handle incoming message
-	discordBot.on("message", async (message) => {
+	/*discordBot.on("message", async (message) => {
 		if (message.author.bot || message.webhookID) return;
 	  	// Handle incoming message here
 		await handleIncomingMessage_discord(message);
 	});
 
 	// Login to Discord
-	discordBot.login(process.env.DISCORD_BOT_TOKEN);
+	discordBot.login(process.env.DISCORD_BOT_TOKEN);*/
 	////////////////
 	
 };

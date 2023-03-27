@@ -1,9 +1,10 @@
 import { Telegraf, Context } from 'telegraf';
 import { openai } from "../providers/openai";
-import { aiConfig } from "../handlers/ai-config_telegram";
+import { aiConfig_telegram } from "../handlers/ai-config_telegram";
 import { CreateImageRequestSizeEnum } from "openai";
 import config from "../config";
 import * as cli from "../cli/ui";
+const { Readable } = require('stream');
 
 // Moderation
 import { moderateIncomingPrompt } from "./moderation";
@@ -32,14 +33,17 @@ const handleMessageDALLE_telegram = async (message: any, prompt: any) => {
 			response_format: "b64_json"
 		});
 
+		console.log(response); // Log the response object
 		const end = Date.now() - start;
-
-		const base64 = response.data.data[0].b64_json as string;
-		const image = new MessageMedia("image/jpeg", base64, "image.jpg");
-
+ 		const imageData = response.data.data[0].b64_json;
+  		// Convert base64 to buffer
+  		const imageBuffer = Buffer.from(imageData, 'base64');
+  		// Convert buffer to a readable stream
+  		const imageStream = Readable.from(imageBuffer);
 		cli.print(`[DALL-E] Answer to ${message.from} | OpenAI request took ${end}ms`);
+		// Send image stream
+		message.replyWithPhoto({ source: imageStream });
 
-		message.reply(image);
 	} catch (error: any) {
 		console.error("An error occured", error);
 		message.reply("An error occured, please contact the administrator. (" + error.message + ")");

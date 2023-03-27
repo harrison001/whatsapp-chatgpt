@@ -6,6 +6,8 @@ import { Telegraf, Context } from 'telegraf';
 import { chatgpt } from "../providers/openai";
 import * as cli from "../cli/ui";
 import config from "../config";
+const { Readable } = require('stream');
+
 
 // TTS
 import { ttsRequest as speechTTSRequest } from "../providers/speech";
@@ -71,7 +73,7 @@ const handleMessageGPT_telegram = async (message: Context, prompt: string) => {
     		message.reply(response);
 		
 		// TTS reply (Default: disabled)
-		if (aiConfig.ttsEnabled) {
+		if (aiConfig_telegram.ttsEnabled) {
 		  const extractedEnglish = extractEnglish(response);
 		  if (extractedEnglish.length > 0) {
 		    sendVoiceMessageReply(message, extractedEnglish);
@@ -160,8 +162,8 @@ async function sendVoiceMessageReply(message: Context, gptTextResponse: string) 
             } else if (audioBuffer.length > 0) {
             	cli.print(`${logTAG} Audio generated!`);
                 // Send audio
-                const messageMedia = new MessageMedia("audio/ogg; codecs=opus", audioBuffer.toString("base64"));
-                message.reply(messageMedia);
+                const audioStream = Readable.from(audioBuffer);
+				message.replyWithVoice({ source: audioStream });
             }
 
         } catch (error) {

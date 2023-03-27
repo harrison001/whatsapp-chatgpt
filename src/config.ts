@@ -52,6 +52,7 @@ interface IConfig {
 
 // Config
 const config: IConfig = {
+	telegramAPIKey: process.env.TELEGRAME_KEY ||"", // Default: ""
 	openAIAPIKey: process.env.OPENAI_API_KEY || "", // Default: ""
 	openAIModel: process.env.OPENAI_GPT_MODEL || "gpt-3.5-turbo", // Default: gpt-3.5-turbo
 	maxModelTokens: getEnvMaxModelTokens(), // Default: 4096

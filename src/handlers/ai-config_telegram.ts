@@ -17,17 +17,17 @@ const handleMessageAIConfig_telegram = async (message: Context, prompt: any) => 
 		const args: string[] = prompt.split(" ");
 		
 		// Handle TTS yes/no command
-		if (args.length === 2 && args[0].toLowerCase() === "tts" && (args[1].toLowerCase() === "yes" || args[1].toLowerCase() === "no")) {
-		    aiConfig_telegram.ttsEnabled = args[1].toLowerCase() === "yes";
-		    message.reply("TTS is now " + (aiConfig.ttsEnabled ? "enabled" : "disabled") + ".");
+		if (args.length === 2 && args[0].toLowerCase() === "tts" && (args[1].toLowerCase() === "on" || args[1].toLowerCase() === "off")) {
+		    aiConfig_telegram.ttsEnabled = args[1].toLowerCase() === "on";
+		    message.reply("TTS is now " + (aiConfig_telegram.ttsEnabled ? "enabled" : "disabled") + ".");
 		    return;
 		}
 
 		/*
 		    Available commands:
 		    !config <target> <type> <value> - Set <target> <type> to <value>
-		    !config tts yes - Turn on TTS and read English responses aloud for easier learning
-		    !config tts no - Turn off TTS and receive text-only responses
+		    !config tts on - Turn on TTS and read English responses aloud for easier learning
+		    !config tts off - Turn off TTS and receive text-only responses
 
 		    Available targets and types:
 		    dalle size: 256x256, 512x512, 1024x1024
@@ -40,12 +40,12 @@ const handleMessageAIConfig_telegram = async (message: Context, prompt: any) => 
 		  for (let target in aiConfigTarget) {
 		    helpMessage += `  ${target}:\n`;
 		    for (let type in aiConfigTypes[target]) {
-		      helpMessage += `    !config ${target} ${type} <value> - Set ${target} ${type} to <value>\n`;
+		      helpMessage += `    !config ${target} ${type} 512x512 - Set ${target} ${type} to <value>\n`;
 		    }
 		    helpMessage += "\n";
 		  }
-		  helpMessage += "  !config tts yes - Turn on TTS and read English responses aloud for easier learning\n";
-		  helpMessage += "  !config tts no - Turn off TTS and receive text-only responses\n\n";
+		  helpMessage += "  !config tts on - Turn on TTS and read English responses aloud for easier learning\n";
+		  helpMessage += "  !config tts off - Turn off TTS and receive text-only responses\n\n";
 
 		  helpMessage += "Available targets and types:\n";
 		  for (let target in aiConfigTarget) {
