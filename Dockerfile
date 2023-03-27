@@ -25,7 +25,6 @@ RUN npm install
 RUN npm install -g pm2
 RUN npm install vite-node
 RUN npm update whatsapp-web.js
-RUN npm install dotenv
 COPY src/Injected.js  /app/node_modules/whatsapp-web.js/src/util/Injected.js
 COPY src/Message.js  /app/node_modules/whatsapp-web.js/src/structures/Message.js
 
