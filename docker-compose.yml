@@ -10,5 +10,4 @@ services:
         volumes:
             - session-data:/app/session
 volumes:
-    session-data:
-~                      
+    session-data:                   
