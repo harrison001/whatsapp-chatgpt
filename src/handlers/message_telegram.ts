@@ -57,7 +57,9 @@ async function handleIncomingMessage_telegram(ctx: Context) {
 		      // 获取语音消息的文件信息
 		      const file = await ctx.telegram.getFile(ctx.message.voice.file_id);
 		      console.log(file)
+
 		      const fileUrl = `https://api.telegram.org/file/bot${config.telegramAPIKey}/${file.file_path}`;
+
 			  console.log(fileUrl);
 			  //speech to text, url to text
 
