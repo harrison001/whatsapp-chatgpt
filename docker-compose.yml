@@ -1,0 +1,14 @@
+version: "3"
+services:
+    whatsapp-chatgpt:
+        image: my-whatsapp-bot:latest
+        env_file: .env
+        environment:
+            OPENAI_API_KEY: $OPENAI_API_KEY
+            OPENAI_GPT_MODEL: $OPENAI_GPT_MODEL
+            PREFIX_ENABLED: $PREFIX_ENABLED
+        volumes:
+            - session-data:/app/session
+volumes:
+    session-data:
+~                      
