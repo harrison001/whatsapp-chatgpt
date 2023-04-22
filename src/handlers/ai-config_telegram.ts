@@ -1,6 +1,7 @@
 import { Telegraf, Context } from 'telegraf';
 import { aiConfigTarget, aiConfigTypes, aiConfigValues, IAiConfig } from "../types/ai-config";
 import { dalleImageSize } from "../types/dalle-config";
+import { setTTSbyID } from "../Userverify";
 
 const aiConfig_telegram: IAiConfig = {
 	dalle: {
@@ -12,14 +13,14 @@ const aiConfig_telegram: IAiConfig = {
 
 const handleMessageAIConfig_telegram = async (message: Context, prompt: any) => {
 	try {
-		console.log("[AI-Config] Received prompt from " + message.from + ": " + prompt);
+		console.log("[AI-Config] Received prompt from " + message.from.id + ": " + prompt);
 
 		const args: string[] = prompt.split(" ");
 		
 		// Handle TTS yes/no command
 		if (args.length === 2 && args[0].toLowerCase() === "tts" && (args[1].toLowerCase() === "on" || args[1].toLowerCase() === "off")) {
-		    aiConfig_telegram.ttsEnabled = args[1].toLowerCase() === "on";
-		    message.reply("TTS is now " + (aiConfig_telegram.ttsEnabled ? "enabled" : "disabled") + ".");
+		    setTTSbyID("telegram_id",message.from.id,args[1].toLowerCase() === "on");
+		    message.reply("TTS is now " + (args[1].toLowerCase() === "on"? "enabled" : "disabled") + ".");
 		    return;
 		}
 

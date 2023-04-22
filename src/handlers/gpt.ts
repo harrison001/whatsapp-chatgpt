@@ -5,6 +5,7 @@ import { randomUUID } from "crypto";
 import { Message, MessageMedia } from "whatsapp-web.js";
 import { chatgpt } from "../providers/openai";
 import * as cli from "../cli/ui";
+import { splitSentences, splitParagraphs } from '../utils';
 import config from "../config";
 
 // TTS
@@ -12,7 +13,7 @@ import { ttsRequest as speechTTSRequest } from "../providers/speech";
 import { ttsRequest as awsTTSRequest } from "../providers/aws";
 import { ttsRequest as azureTTSRequest } from "../providers/Azure_tts";
 import { TTSMode } from "../types/tts-mode";
-import { aiConfig } from "../handlers/ai-config";
+import { getTTSbyID } from "../Userverify";
 // Moderation
 import { moderateIncomingPrompt } from "./moderation";
 
@@ -72,7 +73,8 @@ const handleMessageGPT = async (message: Message, prompt: string) => {
     		message.reply(response);
 		
 		// TTS reply (Default: disabled)
-		if (aiConfig.ttsEnabled) {
+		const ttsStatus = await getTTSbyID("whatsapp_id",message.from);
+		if (ttsStatus) {
 		  const extractedEnglish = extractEnglish(response);
 		  if (extractedEnglish.length > 0) {
 		    sendVoiceMessageReply(message, extractedEnglish);
@@ -111,14 +113,14 @@ function extractEnglish(str) {
 
 async function sendVoiceMessageReply(message: Message, gptTextResponse: string) {
     // Maximum text length for each chunk
-    const chunkSize = 200;
+    const chunkSize = 500;
 
     // Split the text into chunks
-    const chunks = [];
+    /*const chunks = [];
     for (let i = 0; i < gptTextResponse.length; i += chunkSize) {
         chunks.push(gptTextResponse.slice(i, i + chunkSize));
-    }
-
+    }*/
+	const chunks = splitParagraphs(gptTextResponse,chunkSize);
     // Process each chunk
     for (const chunk of chunks) {
         try {
@@ -168,7 +170,7 @@ async function sendVoiceMessageReply(message: Message, gptTextResponse: string) 
             	cli.print(`${logTAG} Audio generated!`);
                 // Send audio
                 const messageMedia = new MessageMedia("audio/ogg; codecs=opus", audioBuffer.toString("base64"));
-                message.reply(messageMedia);
+                await message.reply(messageMedia);
             }
 
         } catch (error) {

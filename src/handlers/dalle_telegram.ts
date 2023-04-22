@@ -13,7 +13,7 @@ const handleMessageDALLE_telegram = async (message: any, prompt: any) => {
 	try {
 		const start = Date.now();
 
-		cli.print(`[DALL-E] Received prompt from ${message.from}: ${prompt}`);
+		cli.print(`[DALL-E] Received prompt from ${message.from.id}: ${prompt}`);
 
 		// Prompt Moderation
 		if (config.promptModerationEnabled) {
@@ -40,7 +40,7 @@ const handleMessageDALLE_telegram = async (message: any, prompt: any) => {
   		const imageBuffer = Buffer.from(imageData, 'base64');
   		// Convert buffer to a readable stream
   		const imageStream = Readable.from(imageBuffer);
-		cli.print(`[DALL-E] Answer to ${message.from} | OpenAI request took ${end}ms`);
+		cli.print(`[DALL-E] Answer to ${message.from.id} | OpenAI request took ${end}ms`);
 		// Send image stream
 		message.replyWithPhoto({ source: imageStream });
 

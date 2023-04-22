@@ -6,6 +6,7 @@ import { Telegraf, Context } from 'telegraf';
 import { chatgpt } from "../providers/openai";
 import * as cli from "../cli/ui";
 import config from "../config";
+import { splitSentences, splitParagraphs } from '../utils';
 const { Readable } = require('stream');
 
 
@@ -14,7 +15,7 @@ import { ttsRequest as speechTTSRequest } from "../providers/speech";
 import { ttsRequest as awsTTSRequest } from "../providers/aws";
 import { ttsRequest as azureTTSRequest } from "../providers/Azure_tts";
 import { TTSMode } from "../types/tts-mode";
-import { aiConfig_telegram } from "../handlers/ai-config_telegram";
+import { getTTSbyID } from "../Userverify";
 // Moderation
 import { moderateIncomingPrompt } from "./moderation";
 
@@ -24,9 +25,9 @@ const conversations = {};
 const handleMessageGPT_telegram = async (message: Context, prompt: string) => {
 	try {
 		// Get last conversation
-		const lastConversationId = conversations[message.from];
+		const lastConversationId = conversations[message.from.id];
 
-		cli.print(`[GPT] Received prompt from ${message.from}: ${prompt}`);
+		cli.print(`[GPT] Received prompt from ${message.from.id}: ${prompt}`);
 
 		// Prompt Moderation
 		if (config.promptModerationEnabled) {
@@ -51,9 +52,9 @@ const handleMessageGPT_telegram = async (message: Context, prompt: string) => {
 			const conv = chatgpt.addConversation(convId);
 
 			// Set conversation
-			conversations[message.from] = conv.id;
+			conversations[message.from.id] = conv.id;
 
-			cli.print(`[GPT] New conversation for ${message.from} (ID: ${conv.id})`);
+			cli.print(`[GPT] New conversation for ${message.from.id} (ID: ${conv.id})`);
 
 			// Pre prompt
 			if (config.prePrompt != null && config.prePrompt.trim() != "") {
@@ -68,13 +69,14 @@ const handleMessageGPT_telegram = async (message: Context, prompt: string) => {
 
 		const end = Date.now() - start;
 
-		cli.print(`[GPT] Answer to ${message.from}: ${response}  | OpenAI request took ${end}ms)`);
+		cli.print(`[GPT] Answer to ${message.from.id}: ${response}  | OpenAI request took ${end}ms)`);
 
     		//Default: Text reply
     		message.reply(response);
 		
 		// TTS reply (Default: disabled)
-		if (aiConfig_telegram.ttsEnabled) {
+		const ttsStatus = await getTTSbyID("telegram_id",message.from.id);
+		if (ttsStatus) {
 		  const extractedEnglish = extractEnglish(response);
 		  if (extractedEnglish.length > 0) {
 		    sendVoiceMessageReply(message, extractedEnglish);
@@ -90,7 +92,7 @@ const handleMessageGPT_telegram = async (message: Context, prompt: string) => {
 
 const handleDeleteConversation_telegram = async (message: Context) => {
 	// Delete conversation
-	delete conversations[message.from];
+	delete conversations[message.from.id];
 
 	// Reply
 	message.reply("Conversation context was resetted!");
@@ -113,13 +115,14 @@ function extractEnglish(str) {
 
 async function sendVoiceMessageReply(message: Context, gptTextResponse: string) {
     // Maximum text length for each chunk
-    const chunkSize = 200;
+    const chunkSize = 500;
 
     // Split the text into chunks
-    const chunks = [];
+    /*const chunks = [];
     for (let i = 0; i < gptTextResponse.length; i += chunkSize) {
         chunks.push(gptTextResponse.slice(i, i + chunkSize));
-    }
+    }*/
+	const chunks = splitParagraphs(gptTextResponse,chunkSize);
 
     // Process each chunk
     for (const chunk of chunks) {
@@ -170,7 +173,7 @@ async function sendVoiceMessageReply(message: Context, gptTextResponse: string) 
             	cli.print(`${logTAG} Audio generated!`);
                 // Send audio
                 const audioStream = Readable.from(audioBuffer);
-				message.replyWithVoice({ source: audioStream });
+				await message.replyWithVoice({ source: audioStream });
             }
 
         } catch (error) {

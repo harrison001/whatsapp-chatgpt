@@ -9,5 +9,5 @@ services:
             PREFIX_ENABLED: $PREFIX_ENABLED
         volumes:
             - session-data:/app/session
-volumes:
-    session-data:                   
+volumes:                   
+    session-data:

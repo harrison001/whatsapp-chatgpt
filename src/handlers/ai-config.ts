@@ -1,6 +1,7 @@
 import { Message } from "whatsapp-web.js";
 import { aiConfigTarget, aiConfigTypes, aiConfigValues, IAiConfig } from "../types/ai-config";
 import { dalleImageSize } from "../types/dalle-config";
+import { setTTSbyID } from "../Userverify";
 
 const aiConfig: IAiConfig = {
 	dalle: {
@@ -18,8 +19,8 @@ const handleMessageAIConfig = async (message: Message, prompt: any) => {
 		
 		// Handle TTS yes/no command
 		if (args.length === 2 && args[0].toLowerCase() === "tts" && (args[1].toLowerCase() === "on" || args[1].toLowerCase() === "off")) {
-		    aiConfig.ttsEnabled = args[1].toLowerCase() === "on";
-		    message.reply("TTS is now " + (aiConfig.ttsEnabled ? "enabled" : "disabled") + ".");
+		    setTTSbyID("whatsapp_id",message.from,args[1].toLowerCase() === "on");
+		    message.reply("TTS is now " + (args[1].toLowerCase() === "on" ? "enabled" : "disabled") + ".");
 		    return;
 		}
 
