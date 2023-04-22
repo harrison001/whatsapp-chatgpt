@@ -11,6 +11,10 @@ dotenv.config();
 // Config Interface
 interface IConfig {
 
+	redisHost: string; 
+	redisPort: number;
+	fastAPIURL: string;
+	
 	azureKey: string;
 	azureRegin: string;
 	telegramAPIKey: string;
@@ -56,6 +60,9 @@ interface IConfig {
 
 // Config
 const config: IConfig = {
+	redisHost: process.env.REDIS_HOST||"", // Default: ""
+	redisPort: process.env.REDIS_PORT||"", // Default: ""
+	fastAPIURL: process.env.FASTAPI_BASE_URL||"", // Default: ""
 	azureKey: process.env.AZURE_SPEECH_KEY ||"", // Default: ""
 	azureRegin: process.env.AZURE_SPEECH_REGION ||"", // Default: ""
 	telegramAPIKey: process.env.TELEGRAME_KEY ||"", // Default: ""

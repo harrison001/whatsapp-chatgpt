@@ -2,18 +2,13 @@
 import axios from "axios";
 import Redis from 'ioredis';
 import { v4 as uuidv4 } from 'uuid';
-
-
-
-import axios from "axios";
-import Redis from 'ioredis';
-import { v4 as uuidv4 } from 'uuid';
+import config from "./config";
 
 
 // 创建 Redis 客户端实例
 const redis = new Redis({
-  port: 6379, // Redis 端口号
-  host: '127.0.0.1', // Redis 地址
+  port: config.redisPort, // Redis 端口号
+  host: config.redisHost, // '127.0.0.1', // Redis 地址
 });
 
 
@@ -49,7 +44,7 @@ async function hGetAllAsync(key: string): Promise<any> {
 }
 
 /////////////////////////////////////////////////////////////////////////
-const API_BASE_URL = 'http://127.0.0.1:8000';
+const API_BASE_URL = config.fastAPIURL
 
 async function handleEmailVerification(userId, platform, email){
   let fetchedUserInfo = await getUserInfoById(platform, userId);
