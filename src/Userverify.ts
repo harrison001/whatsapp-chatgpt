@@ -51,7 +51,7 @@ async function hGetAllAsync(key: string): Promise<any> {
 /////////////////////////////////////////////////////////////////////////
 const API_BASE_URL = 'http://127.0.0.1:8000';
 
-async function handleEmailVerification = async (userId, platform, email) => {
+async function handleEmailVerification(userId, platform, email) => {
   let fetchedUserInfo = await getUserInfoById(platform, userId);
   fetchedUserInfo.email = email.toLowerCase().replace(/\s+/g, ''); // Convert email to lowercase and remove spaces before storing
   await updateUserInfoById(platform, userId, fetchedUserInfo);
@@ -81,7 +81,7 @@ async function handleEmailVerification = async (userId, platform, email) => {
   }
 };
 
-async function checkVerificationCode = async (email, code) => {
+async function checkVerificationCode(email, code) => {
   email = email.toLowerCase().replace(/\s+/g, ''); // Convert email to lowercase and remove spaces before checking
 
   // 获取 Redis 中的验证码
