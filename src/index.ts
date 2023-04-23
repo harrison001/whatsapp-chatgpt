@@ -16,7 +16,7 @@ import { handleIncomingMessage_telegram } from "./handlers/message_telegram";
 import { handleIncomingMessage_discord } from "./handlers/message_discord";
 
 //uservierify
-import { getUserInfoById, updateUserInfoById, mergeUserInfoWithEmail, storeUserInfo, handleEmailVerification, checkVerificationCode, sendActiveNotification } from "./Userverify";
+import { getUserInfoById, updateUserInfoById, mergeUserInfoWithEmail, storeUserInfo, handleEmailVerification, checkVerificationCode, sendActiveNotification, generateUserFriendlyErrorMessage } from "./Userverify";
 import { UserInfo, UserInput } from "./Userverify";
 
 
@@ -189,8 +189,15 @@ const start = async () => {
 
 	    if (text.includes("@")) {
 	        const email = text;
-	        await handleEmailVerification(userId, "whatsapp_id", email);
-	        await message.reply("We've sent a verification code to your email. Please provide the code to activate your subscription.");
+	        const result = await handleEmailVerification(userId, "whatsapp_id", email);
+	        if (result.error) {
+			    // 使用映射函数生成用户友好的错误信息
+			    const errorMessage = generateUserFriendlyErrorMessage(result.error);
+			    await message.reply(errorMessage);
+			} else {
+			    // 发送验证码提示信息
+			    await message.reply("We've sent a verification code to your email. Please provide the code to activate your subscription.");
+			}
 	    } else if (text.length === 6 && /^\d+$/.test(text)) {
 	        const code = text;
 	        await handleVerificationCode(userId, "whatsapp_id", code, (msg) => message.reply(msg));
@@ -223,8 +230,15 @@ const start = async () => {
 
 		if (text.includes("@")) {
 		    const email = text;
-		    await handleEmailVerification(userId, "telegram_id", email);
-		    await ctx.reply("We've sent a verification code to your email. Please provide the code to activate your subscription.");
+		    const result = await handleEmailVerification(userId, "telegram_id", email);
+		    if (result.error) {
+			    // 使用映射函数生成用户友好的错误信息
+			    const errorMessage = generateUserFriendlyErrorMessage(result.error);
+			    await ctx.reply(errorMessage);
+			} else {
+			    // 发送验证码提示信息
+			    await ctx.reply("We've sent a verification code to your email. Please provide the code to activate your subscription.");
+			}
 		} else if (text.length === 6 && /^\d+$/.test(text)) {
 		    const code = text;
         	await handleVerificationCode(userId, "telegram_id", code, (msg) => ctx.reply(msg));

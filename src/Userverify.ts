@@ -43,10 +43,33 @@ async function hGetAllAsync(key: string): Promise<any> {
   });
 }
 
+async function generateUserFriendlyErrorMessage(errorCode) {
+  const errorMessages = {
+  'INVALID_PLATFORM': 'Unable to process your request because the platform is invalid.',
+  'USER_NOT_FOUND': 'Cannot find a user matching the email address you provided.',
+  'ATTEMPT_LIMIT_EXCEEDED': 'You have attempted to input your email address 3 times in the past 5 minutes. Please try again later.',
+  'EMAIL_NOT_SUBSCTIBED': 'The provided email address is not subscribed to our service.',
+  'INTERNAL_ERROR': 'An internal error has occurred. Please try again later.'
+  };
+
+  return errorMessages[errorCode] || 'An unknown error has occurred. Please try again later.';
+}
+
 /////////////////////////////////////////////////////////////////////////
 const API_BASE_URL = config.fastAPIURL
 
 async function handleEmailVerification(userId, platform, email){
+
+  // 检查用户是否已达到尝试次数限制
+  const attemptCount = await redis.get(`email_attempt_count:${userId}`);
+  const attemptExpiry = await redis.get(`email_attempt_expiry:${userId}`);
+
+  if (attemptCount && parseInt(attemptCount) >= 3) {
+    const timeRemaining = Math.floor((parseInt(attemptExpiry) - Date.now()) / 1000 / 60);
+    return { error: 'ATTEMPT_LIMIT_EXCEEDED'};
+  }
+
+
   let fetchedUserInfo = await getUserInfoById(platform, userId);
   fetchedUserInfo.email = email.toLowerCase().replace(/\s+/g, ''); // Convert email to lowercase and remove spaces before storing
   await updateUserInfoById(platform, userId, fetchedUserInfo);
@@ -64,22 +87,36 @@ async function handleEmailVerification(userId, platform, email){
     console.log(user_input);
     const response = await axios.post(`${API_BASE_URL}/send_verification_code/`, user_input);
     console.log(response);
-    const verificationCode = response.data.verification_code;
+    if (response.data.is_subscribed) //如果用户已经订阅，则进行后续处理，否则不会发送验证码
+    {
 
-    // 将验证码存储到 Redis，设置有效期为 10 分钟
-    await redis.set(`verification_code:${fetchedUserInfo.email}`, verificationCode, 'EX', 600);
+      const verificationCode = response.data.verification_code;
 
-    // 初始化用户尝试次数为 0
-    await redis.set(`attempt_count:${fetchedUserInfo.email}`, 0, 'EX', 600);
+      // 将验证码存储到 Redis，设置有效期为 10 分钟
+      await redis.set(`verification_code:${fetchedUserInfo.email}`, verificationCode, 'EX', 600);
 
-    return response.data;
+      // 初始化用户尝试次数为 0
+      await redis.set(`attempt_count:${fetchedUserInfo.email}`, 0, 'EX', 600);
+
+        // 验证成功后，更新邮箱验证的尝试次数和截至时间
+      if (!attemptCount || !attemptExpiry) {
+        await redis.set(`email_attempt_count:${userId}`, 1, 'EX', 300);
+        await redis.set(`email_attempt_expiry:${userId}`, (Date.now() + 5 * 60 * 1000).toString(), 'EX', 300);
+      } else {
+        await redis.incr(`email_attempt_count:${userId}`);
+      }
+      return "CODE_VERIFICATION_SUCCESSFULL";
+    } else {
+      return { error: response.data.message };
+    }
+    
   } catch (error) {
     if (error.response) {
       console.error(`Error ${error.response.status}: ${error.response.data}`);
-      return { error: `Error ${error.response.status}: ${error.response.data}` };
+      return { error: "INTERNAL_ERROR" };
     } else {
       console.error(`Error: ${error.message}`);
-      return { error: `Error: ${error.message}` };
+      return { error: "INTERNAL_ERROR" };
     }
   }
 };
@@ -332,5 +369,5 @@ async function setTTSbyID(idType: string, idValue: string, ttsStatus: boolean): 
   }
 }
 
-export { getUserInfoById, updateUserInfoById, setTTSbyID, getTTSbyID, mergeUserInfoWithEmail, storeUserInfo, handleEmailVerification, checkVerificationCode,sendActiveNotification};
+export { getUserInfoById, updateUserInfoById, setTTSbyID, getTTSbyID, mergeUserInfoWithEmail, storeUserInfo, handleEmailVerification, checkVerificationCode,sendActiveNotification, generateUserFriendlyErrorMessage};
 export { UserInfo, UserInput };
