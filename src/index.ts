@@ -70,8 +70,8 @@ const handleVerificationCode = async (userId, platform, code, replyFunc) => {
     // 检查用户是否提供了邮箱地址
     if (fetchedUserInfo.email) {
         // 检查验证码是否匹配
-        const isValidCode = await checkVerificationCode(fetchedUserInfo.email, code);
-        if (isValidCode) {
+        const result = await checkVerificationCode(fetchedUserInfo.email, code);
+        if (result.isValid) {
             fetchedUserInfo.is_subscribed = true;
             await updateUserInfoById(platform, userId, fetchedUserInfo);
             // 调用 sendActiveNotification 函数以发送激活通知
