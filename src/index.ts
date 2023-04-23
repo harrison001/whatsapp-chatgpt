@@ -41,7 +41,7 @@ const handleUserInfo = async (userId, platform) => {
 			telegram_id: null,
 			discord_id: null,
 			line_id: null,
-			remaining_questions: 1,
+			remaining_questions: 10,
 			is_subscribed: false,
 			tts_on: true,
 		};
