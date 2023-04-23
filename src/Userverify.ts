@@ -74,8 +74,13 @@ async function handleEmailVerification(userId, platform, email){
 
     return response.data;
   } catch (error) {
-    console.error(`Error ${error.response.status}: ${error.response.data}`);
-    return { error: `Error ${error.response.status}: ${error.response.data}` };
+    if (error.response) {
+      console.error(`Error ${error.response.status}: ${error.response.data}`);
+      return { error: `Error ${error.response.status}: ${error.response.data}` };
+    } else {
+      console.error(`Error: ${error.message}`);
+      return { error: `Error: ${error.message}` };
+    }
   }
 };
 
