@@ -60,7 +60,10 @@ async function handleEmailVerification(userId, platform, email){
   };
 
   try {
+    console.log(API_BASE_URL);
+    console.log(user_input);
     const response = await axios.post(`${API_BASE_URL}/send_verification_code/`, user_input);
+    console.log(response);
     const verificationCode = response.data.verification_code;
 
     // 将验证码存储到 Redis，设置有效期为 10 分钟
