@@ -160,7 +160,7 @@ const start = async () => {
 	        const result = await handleEmailVerification(userId, "whatsapp_id", email);
 	        if (result.error) {
 			    // 使用映射函数生成用户友好的错误信息
-			    const errorMessage = generateUserFriendlyErrorMessage(result.error);
+			    const errorMessage = await generateUserFriendlyErrorMessage(result.error);
 			    await message.reply(errorMessage);
 			} else {
 			    // 发送验证码提示信息
@@ -199,7 +199,7 @@ const start = async () => {
 	        const result = await handleEmailVerification(userId, "whatsapp_id", email);
 	        if (result.error) {
 			    // 使用映射函数生成用户友好的错误信息
-			    const errorMessage = generateUserFriendlyErrorMessage(result.error);
+			    const errorMessage = await generateUserFriendlyErrorMessage(result.error);
 			    await message.reply(errorMessage);
 			} else {
 			    // 发送验证码提示信息
@@ -241,7 +241,7 @@ const start = async () => {
 		    console.log(result);
 		    if (result.error) {
 			    // 使用映射函数生成用户友好的错误信息
-			    const errorMessage = generateUserFriendlyErrorMessage(result.error);
+			    const errorMessage = await generateUserFriendlyErrorMessage(result.error);
 			    console.log(errorMessage);
 			    await ctx.reply(errorMessage);
 			} else {
