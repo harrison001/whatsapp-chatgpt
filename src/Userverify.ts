@@ -75,6 +75,15 @@ async function handleEmailVerification(userId, platform, email){
   await updateUserInfoById(platform, userId, fetchedUserInfo);
   console.log(`handleEmailVerification:${fetchedUserInfo.email}:${fetchedUserInfo.whatsapp_id}:${fetchedUserInfo.telegram_id}:${fetchedUserInfo.is_subscribed}`)
 
+
+
+  // 验证成功后，更新邮箱验证的尝试次数和截至时间
+  if (!attemptCount || !attemptExpiry) {
+        await redis.set(`email_attempt_count:${userId}`, 1, 'EX', 300);
+        await redis.set(`email_attempt_expiry:${userId}`, (Date.now() + 5 * 60 * 1000).toString(), 'EX', 300);
+      } else {
+        await redis.incr(`email_attempt_count:${userId}`);
+  }
   // 在这里调用您的 FastAPI 后端以发送验证电子邮件
   const user_input:UserInput = {
     platform_id: userId,
@@ -98,13 +107,6 @@ async function handleEmailVerification(userId, platform, email){
       // 初始化用户尝试次数为 0
       await redis.set(`attempt_count:${fetchedUserInfo.email}`, 0, 'EX', 600);
 
-        // 验证成功后，更新邮箱验证的尝试次数和截至时间
-      if (!attemptCount || !attemptExpiry) {
-        await redis.set(`email_attempt_count:${userId}`, 1, 'EX', 300);
-        await redis.set(`email_attempt_expiry:${userId}`, (Date.now() + 5 * 60 * 1000).toString(), 'EX', 300);
-      } else {
-        await redis.incr(`email_attempt_count:${userId}`);
-      }
       return "CODE_VERIFICATION_SUCCESSFULL";
     } else {
       return { error: response.data.message };
