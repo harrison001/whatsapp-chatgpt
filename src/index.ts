@@ -87,7 +87,12 @@ const handleVerificationCode = async (userId, platform, code, replyFunc) => {
             await mergeUserInfoWithEmail(fetchedUserInfo.email);
         } else {
             // 在这里向用户发送验证码错误的消息
-            await replyFunc("The verification code you provided is incorrect. Please try again.");
+            if (result.isLocked)
+            {
+                await replyFunc("Your error attempts have been too many, and your verification feature has been locked. Please try again later.");	
+            } else {
+            	await replyFunc("The verification code you provided is incorrect. Please try again.");
+            }
         }
     } else {
         // 在这里向用户发送错误消息，要求先提供邮箱地址
