@@ -137,6 +137,7 @@ async function checkVerificationCode(email, code) {
     return { isValid: false, isLocked: true };
   }
 
+  console.log("verifying code:",storedCode,code);
   if (storedCode === code) {
     return { isValid: true, isLocked: false };
   } else {
